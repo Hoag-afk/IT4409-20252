@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <h1>EX1</h1>
+    <p>With await</p>
+
+    <div id="output1"></div>
+
+    <script>
+        const output1 = document.getElementById("output1");
+        function fetchData() {
+            return new Promise(resolve =>
+                setTimeout(() => resolve("Data received"), 1000)
+            );
+        }
+
+        async function load() {
+
+            output1.innerHTML += "Before await<br>";
+
+            const data = await fetchData();
+
+            output1.innerHTML += "After await: " + data + "<br>";
+        }
+
+        load();
+        output1.innerHTML += "This log run first!<br>";
+    </script>
+
+    <p>Without await</p>
+    <div id="output2"></div>
+
+    <script>
+        const output2 = document.getElementById("output2");
+        function fetchData() {
+            return new Promise(resolve =>
+                setTimeout(() => resolve("Data received"), 1000)
+            );
+        }
+
+        async function load() {
+
+            output2.innerHTML += "Before fetchData<br>";
+
+            const data = fetchData();
+
+            output2.innerHTML += "After fetchData: " + data + "<br>";
+        }
+        load();
+        output2.innerHTML += "This log run first!<br>";
+    </script>
+</body>
+
+</html>
