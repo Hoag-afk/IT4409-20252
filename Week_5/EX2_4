@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>EX2 & 4</title>
+</head>
+
+<body>
+    <div id="EX2">
+        <section id="exercise-2">
+            <h2>Ex 2: Array Methods (Map, Filter, Reduce)</h2>
+            <p>Student List:</p>
+            <ul>
+                <li>Alice: 90</li>
+                <li>Bob: 70</li>
+                <li>Charlie: 85</li>
+                <li>David: 60</li>
+            </ul>
+            <p>Calculating the average score from a student array:</p>
+            <div class="result-box">
+                Average Score: <span id="avg-result">Calculating...</span>
+            </div>
+        </section>
+    </div>
+
+    <div id="EX4">
+        <section id="exercise-4">   
+            <h2>Ex 4: </h2>
+        </section>
+        <input type="text" id="text_input">
+        <button id="submit" type="submit">Submit</button>
+        <p>Provided input will be added to the list below:</p>
+        <ul id="result_list"></ul>
+
+        <script>
+            const students = [
+            { name: "Alice", score: 90 },
+            { name: "Bob", score: 70 },
+            { name: "Charlie", score: 85 },
+            { name: "David", score: 60 }
+        ];
+
+        const total = students
+            .filter(s => s.score >= 0)
+            .map(s => s.score)
+            .reduce((accumulator, current) => accumulator + current, 0);
+
+        const average = total / students.length;
+
+        document.getElementById('avg-result').textContent = average.toFixed(2); 
+
+            const submitButton = document.getElementById('submit');
+            const textInput = document.getElementById('text_input');
+            const resultList = document.getElementById('result_list');
+
+            submitButton.addEventListener('click', function () {
+                const inputValue = textInput.value;
+                const listItem = document.createElement('li');
+                listItem.textContent = inputValue;
+                resultList.appendChild(listItem);
+                textInput.value = '';
+            });
+        </script>
+
+</body>
+
+</html>
