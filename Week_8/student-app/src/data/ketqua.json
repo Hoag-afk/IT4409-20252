@@ -1,0 +1,5 @@
+[
+  { "mssv": "SV001", "subject": "Toán", "qt": 8, "ck": 7, "semester": 1 },
+  { "mssv": "SV001", "subject": "Lý", "qt": 9, "ck": 8, "semester": 1 },
+  { "mssv": "SV002", "subject": "Hóa", "qt": 7, "ck": 6, "semester": 1 }
+]
