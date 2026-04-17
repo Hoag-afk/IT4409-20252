@@ -1,0 +1,107 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f9;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+#root {
+    width: 100%;
+    max-width: 1000px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #2c3e50;
+    text-align: center;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+}
+
+/* Form tìm kiếm và thêm */
+input[type="text"],
+input[type="email"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin: 5px 0;
+    width: calc(100% - 22px);
+}
+
+button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-right: 5px;
+}
+
+.btn-add {
+    background-color: #27ae60;
+    color: white;
+    margin-bottom: 20px;
+}
+
+.btn-add:hover {
+    background-color: #219150;
+}
+
+.btn-change {
+    background-color: #3498db;
+    color: white;
+}
+
+.btn-change:hover {
+    background-color: #2980b9;
+}
+
+.btn-delete {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #c0392b;
+}
+
+/* Bảng dữ liệu */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 25px;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+}
+
+th {
+    background-color: #f8f9fa;
+    color: #7f8c8d;
+    text-transform: uppercase;
+    font-size: 13px;
+}
+
+tr:hover {
+    background-color: #f1f9ff;
+}
+
+/* Modal/Form sửa */
+.edit-form-container {
+    background: #fdfdfd;
+    border: 2px solid #3498db;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
