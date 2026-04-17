@@ -1,0 +1,45 @@
+TÀI LIỆU MÔ TẢ QUY TRÌNH PHÂN TRANG (PAGINATION LOGIC) TRONG REACT
+
+    1. MỤC TIÊU
+Chia một danh sách dữ liệu lớn (mảng users) thành các đoạn nhỏ hơn để hiển thị trên nhiều trang, giúp giao diện gọn gàng và tăng trải nghiệm người dùng.
+
+    2. CÁC BIẾN TRẠNG THÁI (STATE) SỬ DỤNG
+
+users: Mảng gốc chứa toàn bộ dữ liệu người dùng.
+currentPage: Biến lưu trữ số trang hiện tại người dùng đang xem (mặc định bắt đầu từ 1).
+usersPerPage: Biến hằng số quy định số lượng bản ghi hiển thị trên mỗi trang (trong bài là 5).
+
+    3. QUY TRÌNH TÍNH TOÁN LOGIC (Thực hiện bên trong hàm render)
+    Quá trình này diễn ra sau khi đã lọc dữ liệu theo từ khóa tìm kiếm (keyword):
+Bước 1: Tính toán chỉ số (Index)
+indexOfLastUser = currentPage * usersPerPage: Tìm vị trí cuối cùng của bản ghi ở trang hiện tại.
+indexOfFirstUser = indexOfLastUser - usersPerPage: Tìm vị trí bắt đầu của bản ghi ở trang hiện tại.
+Ví dụ: Ở trang 2, vị trí cuối là 10, vị trí đầu là 5.
+
+Bước 2: Cắt mảng dữ liệu (Slicing)
+currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser): Sử dụng hàm .slice() để trích xuất một mảng con từ mảng đã lọc. Mảng currentUsers này chỉ chứa đúng 5 người dùng cần hiển thị cho trang đó.
+
+Bước 3: Tính tổng số trang (Total Pages)
+totalPages = Math.ceil(filteredUsers.length / usersPerPage): Lấy tổng số lượng bản ghi sau khi lọc chia cho số bản ghi mỗi trang và làm tròn lên (hàm Math.ceil).
+
+    4. ĐIỀU HƯỚNG GIAO DIỆN (UI NAVIGATION)
+
+Nút "Trước" (Previous):
+Giảm currentPage đi 1 đơn vị.
+Điều kiện disabled: Nếu currentPage === 1 thì khóa nút không cho bấm.
+Hiển thị số trang:
+Hiển thị theo định dạng: "Trang [currentPage] / [totalPages]".
+Nút "Sau" (Next):
+Tăng currentPage thêm 1 đơn vị.
+Điều kiện disabled: Nếu currentPage === totalPages thì khóa nút không cho bấm.
+
+    5. CƠ CHẾ ĐỒNG BỘ HÓA (SYNCHRONIZATION)
+
+Đưa về trang 1 khi tìm kiếm:
+Sử dụng React.useEffect lắng nghe sự thay đổi của biến keyword. Mỗi khi người dùng gõ tìm kiếm, hàm setCurrentPage(1) sẽ được gọi để tránh lỗi người dùng ở trang quá xa so với số lượng kết quả trả về.
+
+    6. HIỆU QUẢ ĐẠT ĐƯỢC
+
+Không làm thay đổi mảng dữ liệu gốc.
+Tốc độ xử lý nhanh vì chỉ render một lượng nhỏ phần tử DOM tại một thời điểm.
+Giao diện linh hoạt trên cả máy tính và điện thoại nhờ kết hợp CSS Media Queries.

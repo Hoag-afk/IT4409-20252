@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        #root {
+            width: 100%;
+            max-width: 1000px;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        /* Form tìm kiếm và thêm */
+        input[type="text"],
+        input[type="email"] {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin: 5px 0;
+            width: calc(100% - 22px);
+        }
+
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-right: 5px;
+        }
+
+        .btn-add {
+            background-color: #27ae60;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .btn-add:hover {
+            background-color: #219150;
+        }
+
+        .btn-change {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-change:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-delete {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background-color: #c0392b;
+        }
+
+        /* Bảng dữ liệu */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            font-size: 13px;
+        }
+
+        tr:hover {
+            background-color: #f1f9ff;
+        }
+
+        /* Modal/Form sửa */
+        .edit-form-container {
+            background: #fdfdfd;
+            border: 2px solid #3498db;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            #root {
+                padding: 15px;
+                border-radius: 0;
+                /* Bỏ bo góc để tối ưu không gian màn hình nhỏ */
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            /* Biến bảng thành dạng danh sách thẻ (Card) */
+            table,
+            thead,
+            tbody,
+            th,
+            td,
+            tr {
+                display: block;
+            }
+
+            /* Ẩn tiêu đề bảng (vì chúng ta sẽ dùng nhãn giả bên dưới) */
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+
+            tr {
+                border: 1px solid #ddd;
+                margin-bottom: 15px;
+                border-radius: 8px;
+                background: #fff;
+                padding: 10px;
+            }
+
+            td {
+                border: none;
+                position: relative;
+                padding-left: 50% !important;
+                /* Tạo không gian cho nhãn bên trái */
+                text-align: right;
+                border-bottom: 1px solid #eee;
+            }
+
+            /* Tạo nhãn giả từ dữ liệu */
+            td:before {
+                position: absolute;
+                left: 15px;
+                width: 45%;
+                white-space: nowrap;
+                text-align: left;
+                font-weight: bold;
+                color: #7f8c8d;
+            }
+
+            /* Định nghĩa nhãn cho từng cột */
+            td:nth-of-type(1):before {
+                content: "Name";
+            }
+
+            td:nth-of-type(2):before {
+                content: "Username";
+            }
+
+            td:nth-of-type(3):before {
+                content: "Email";
+            }
+
+            td:nth-of-type(4):before {
+                content: "Địa chỉ";
+            }
+
+            td:nth-of-type(5):before {
+                content: "SĐT";
+            }
+
+
+            td:last-child {
+                border-bottom: 0;
+            }
+
+            /* Chỉnh lại các nút bấm cho full màn hình trên điện thoại */
+            button {
+                width: 100%;
+                margin: 5px 0;
+            }
+
+            input[type="text"],
+            input[type="email"] {
+                font-size: 16px;
+                /* Tránh iOS tự động zoom khi focus vào input */
+            }
+
+            td:nth-last-child(2),
+            td:nth-last-child(1) {
+                display: inline-block;
+                width: 50%;
+                /* Mỗi ô chiếm một nửa chiều ngang */
+                padding: 10px !important;
+                box-sizing: border-box;
+                border: none;
+                text-align: center;
+            }
+
+            /*  Căn chỉnh nhãn và nút */
+            /* Ô 'Sửa' vẫn giữ nhãn 'Thao tác' bên trái */
+            td:nth-last-child(2):before {
+                position: absolute;
+                left: 15px;
+                font-weight: bold;
+            }
+
+            /* Ô 'Xóa' ẩn nhãn đi để dành chỗ cho nút */
+            td:nth-last-child(1):before {
+                display: none;
+            }
+
+            /* 3. Làm cho các nút bấm cân đối */
+            td:nth-last-child(2) button,
+            td:nth-last-child(1) button {
+                width: 90%;
+                /* Nút chiếm gần hết ô td để dễ bấm */
+                margin: 0;
+                float: right;
+                /* Đẩy nút Sửa về bên phải của ô nó */
+            }
+
+            td:nth-last-child(1) button {
+                float: left;
+                /* Đẩy nút Xóa về bên trái của ô nó */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        function App() {
+            const [kw, setKeyword] = React.useState("");
+            const [newUser, setNewUser] = React.useState(null);
+            return (
+                <div>
+                    <h1>Quản lý người dùng</h1>
+                    <SearchForm onChangeValue={setKeyword} />
+                    <AddUser onAdd={setNewUser} />
+                    <ResultTable keyword={kw} users={newUser} onAdded={() => setNewUser(null)} />
+                </div>
+            )
+        }
+
+        function SearchForm({ onChangeValue }) {
+            return (
+                <div>
+                    <input
+                        type="text"
+                        placeholder="Tìm kiếm người dùng theo name, username"
+                        onChange={(e) => onChangeValue(e.target.value)}
+                    />
+                </div>
+            );
+        }
+
+        function ResultTable({ keyword, user, onAdded }) {
+            const [users, setUsers] = React.useState([]);
+            const [loading, setLoading] = React.useState(true);
+            const [editing, setEditing] = React.useState(null);
+
+            const [currentPage, setCurrentPage] = React.useState(1);
+            const usersPerPage = 5; // Số người dùng hiển thị trên mỗi trang
+
+            //Tải dữ liệu 1 lần khi component mount
+            React.useEffect(() => {
+                fetch("https://jsonplaceholder.typicode.com/users")
+                    .then(res => res.json())
+                    .then(data => {
+                        setUsers(data);
+                        setLoading(false);
+                    });
+            }, []);
+
+            const filteredUsers = users.filter(user =>
+                user.name.toLowerCase().includes(keyword.toLowerCase()) ||
+                user.username.toLowerCase().includes(keyword.toLowerCase())
+            );
+
+            React.useEffect(() => {
+                if (user) {
+                    setUsers(prev => [...prev, { ...user, id: prev.length + 1 }]);
+                    onAdded();
+                }
+            }, [user]);
+
+            const handleSave = () => {
+                setUsers(prev => prev.map(u => u.id === editing.id ? editing : u));
+                setEditing(null);
+            }
+
+            function removeUser(id) {
+                setUsers(prev => prev.filter(u => u.id !== id));
+            }
+
+            const indexOfLastUser = currentPage * usersPerPage;
+            const indexOfFirstUser = indexOfLastUser - usersPerPage;
+            const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+            const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+
+            // Mỗi khi từ khóa tìm kiếm thay đổi, hãy đưa người dùng về trang đầu tiên
+            React.useEffect(() => {
+                setCurrentPage(1);
+            }, [keyword]);
+
+            if (loading) {
+                return <p>Loading...</p>;
+            }
+
+            return (
+                <div>
+                    {editing ? (
+                        <EditUser
+                            user={editing}
+                            setEditing={setEditing}
+                            onSave={handleSave}
+                            onCancel={() => setEditing(null)}
+                        />
+                    ) : (
+                        <div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Username</th>
+                                        <th>Email</th>
+                                        <th>Địa chỉ</th>
+                                        <th>SĐT</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {currentUsers.map(user => (
+                                        <tr key={user.id}>
+                                            <td>{user.name}</td>
+                                            <td>{user.username}</td>
+                                            <td>{user.email}</td>
+                                            <td>{user.address?.street},{user.address?.suite}, {user.address?.city}</td>
+                                            <td>{user.phone}</td>
+                                            <td><button className="btn-change" onClick={() => setEditing(user)}>Sửa</button></td>
+                                            <td><button className="btn-delete" onClick={() => removeUser(user.id)}>Xóa</button></td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                            <div className="pagination">
+                                <button
+                                    disabled={currentPage === 1}
+                                    onClick={() => setCurrentPage(prev => prev - 1)}
+                                >
+                                    Trước
+                                </button>
+
+                                <span> Trang {currentPage} / {totalPages} </span>
+
+                                <button
+                                    disabled={currentPage === totalPages}
+                                    onClick={() => setCurrentPage(prev => prev + 1)}
+                                >
+                                    Sau
+                                </button>
+                            </div>
+                        </div>
+                    )
+                    }
+                </div>)
+
+        }
+
+        function AddUser({ onAdd }) {
+            // Implementation for adding a new user
+            const [user, setUser] = React.useState({
+                name: "",
+                username: "",
+                email: "",
+                address: {
+                    street: "",
+                    suite: "",
+                    city: ""
+                },
+                phone: "", website: ""
+            });
+            const [adding, setAdding] = React.useState(false);
+
+            const handleChange = (e) => {
+                const { id, value } = e.target;
+                if (["street", "suite", "city"].includes(id)) {
+                    setUser({ ...user, address: { ...user.address, [id]: value } });
+                } else {
+                    setUser({ ...user, [id]: value });
+                }
+            }
+
+            const handleAdd = () => {
+                if (user.name == "" || user.username === "") {
+                    alert("Vui lòng nhập name và username");
+                    return;
+                }
+                onAdd(user);
+                setUser({
+                    name: "",
+                    username: "",
+                    email: "",
+                    address: {
+                        street: "",
+                        suite: "",
+                        city: ""
+                    },
+                    phone: "", website: ""
+                });
+                setAdding(false);
+            }
+
+            return (
+                <div>
+                    <button className="btn-add" onClick={() => setAdding(true)}>Thêm người dùng</button>
+                    {adding && (
+                        <div>
+                            <h4>Thêm người dùng mới</h4>
+                            <div>
+                                <label htmlFor="name">Name: </label>
+                                <input id="name" type="text" value={user.name} onChange={handleChange} placeholder="Name" />
+                            </div>
+                            <div>
+                                <label htmlFor="username">Username: </label>
+                                <input id="username" type="text" value={user.username} onChange={handleChange} placeholder="Username" />
+                            </div>
+                            <div>
+                                <label htmlFor="email">Email: </label>
+                                <input id="email" type="email" value={user.email} onChange={handleChange} placeholder="Email" />
+                            </div>
+                            <div>
+                                <label htmlFor="street">Street: </label>
+                                <input id="street" type="text" value={user.address.street} onChange={handleChange} placeholder="Street" />
+                            </div>
+                            <div>
+                                <label htmlFor="suite">Suite: </label>
+                                <input id="suite" type="text" value={user.address.suite} onChange={handleChange} placeholder="Suite" />
+                            </div>
+                            <div>
+                                <label htmlFor="city">City: </label>
+                                <input id="city" type="text" value={user.address.city} onChange={handleChange} placeholder="City" />
+                            </div>
+                            <div>
+                                <label htmlFor="phone">Phone: </label>
+                                <input id="phone" type="text" value={user.phone} onChange={handleChange} placeholder="Phone" />
+                            </div>
+                            <div>
+                                <label htmlFor="website">Website: </label>
+                                <input id="website" type="text" value={user.website} onChange={handleChange} placeholder="Website" />
+                            </div>
+                            <button className="btn-change" onClick={handleAdd}>
+                                Lưu
+                            </button>
+                            <button className="btn-delete" onClick={() => setAdding(false)}>
+                                Hủy
+                            </button>
+                        </div>
+                    )}
+                </div>
+            )
+        }
+
+        function EditUser({ user, setEditing, onSave, onCancel }) {
+            // Implementation for editing a user
+
+            const handleEditChange = (e) => {
+                const { id, value } = e.target;
+                if (["street", "suite", "city"].includes(id)) {
+                    setEditing(prev => ({ ...prev, address: { ...prev.address, [id]: value } }));
+                } else {
+                    setEditing(prev => ({ ...prev, [id]: value }));
+                }
+            }
+
+            return (
+                <div className="edit-form-container">
+                    <h4>Sửa thông tin người dùng</h4>
+                    <div>
+                        <label htmlFor="name">Name: </label>
+                        <input id="name" type="text" value={user.name} onChange={handleEditChange} placeholder="Name" />
+                    </div>
+                    <div>
+                        <label htmlFor="username">Username: </label>
+                        <input id="username" type="text" value={user.username} onChange={handleEditChange} placeholder="Username" />
+                    </div>
+                    <div>
+                        <label htmlFor="email">Email: </label>
+                        <input id="email" type="email" value={user.email} onChange={handleEditChange} placeholder="Email" />
+                    </div>
+                    <div>
+                        <label htmlFor="street">Street: </label>
+                        <input id="street" type="text" value={user.address.street} onChange={handleEditChange} placeholder="Street" />
+                    </div>
+                    <div>
+                        <label htmlFor="suite">Suite: </label>
+                        <input id="suite" type="text" value={user.address.suite} onChange={handleEditChange} placeholder="Suite" />
+                    </div>
+                    <div>
+                        <label htmlFor="city">City: </label>
+                        <input id="city" type="text" value={user.address.city} onChange={handleEditChange} placeholder="City" />
+                    </div>
+                    <div>
+                        <label htmlFor="phone">Phone: </label>
+                        <input id="phone" type="text" value={user.phone} onChange={handleEditChange} placeholder="Phone" />
+                    </div>
+                    <div>
+                        <label htmlFor="website">Website: </label>
+                        <input id="website" type="text" value={user.website} onChange={handleEditChange} placeholder="Website" />
+                    </div>
+                    <button onClick={() => onSave(user)}>Lưu</button>
+                    <button onClick={onCancel}>Hủy</button>
+                </div>
+            )
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>
